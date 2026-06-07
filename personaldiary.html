@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inkwell — Personal Diary</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400;700&family=Caveat:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1208; --paper: #faf6ef; --warm: #c8956c;
+    --sepia: #8b6f47; --sepia-light: #d4b896; --cream: #f5ede0;
+    --shadow: rgba(26,18,8,0.18); --accent: #e8a0b4;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    min-height: 100vh;
+    background: #d9c9b5;
+    background-image: radial-gradient(ellipse at 15% 85%, rgba(232,160,180,0.15) 0%, transparent 50%);
+    display: flex; flex-direction: column; align-items: center;
+    font-family: 'Lato', sans-serif; color: var(--ink);
+  }
+  .top-bar {
+    width: 100%; background: var(--ink); padding: 12px 40px;
+    display: flex; align-items: center; justify-content: space-between;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+  }
+  .top-bar a {
+    color: var(--sepia-light); text-decoration: none; font-size: 13px;
+    letter-spacing: 1px; transition: color .2s;
+  }
+  .top-bar a:hover { color: var(--warm); }
+  .top-bar-title { font-family:'Playfair Display',serif; color: var(--paper); font-size: 18px; }
+  .privacy-badge {
+    background: rgba(232,160,180,.2); color: var(--accent);
+    border: 1px solid rgba(232,160,180,.3); padding: 3px 12px;
+    border-radius: 20px; font-size: 11px; letter-spacing: 2px;
+    text-transform: uppercase; font-weight: 700;
+  }
+
+  /* ── Status bar ── */
+  .status-bar {
+    width: min(760px,96vw); margin-top: 14px; min-height: 20px;
+    font-size: 12px; color: var(--sepia); font-style: italic;
+    text-align: center; letter-spacing: .5px;
+  }
+  .status-bar.err { color: #c0392b; font-style: normal; font-weight: 700; }
+
+  /* ── Book ── */
+  .book-wrapper { padding: 30px 20px 10px; width:100%; display:flex; flex-direction:column; align-items:center; }
+  .book {
+    width: min(760px,96vw); height: min(440px,60vw); min-height: 320px;
+    display: flex; background: var(--paper);
+    box-shadow: 0 20px 60px var(--shadow), inset 0 0 0 1px rgba(139,111,71,.1);
+    border-radius: 4px 8px 8px 4px; position: relative;
+  }
+  .book::before {
+    content:''; position:absolute; left:50%; top:0; bottom:0; width:3px;
+    background: linear-gradient(to bottom, var(--sepia-light), var(--sepia), var(--sepia-light));
+    z-index:10; box-shadow:-2px 0 8px rgba(0,0,0,.08), 2px 0 8px rgba(0,0,0,.08);
+  }
+  .left-page {
+    width:50%; padding:28px 30px;
+    background: repeating-linear-gradient(to bottom, transparent, transparent 27px, rgba(139,111,71,.12) 27px, rgba(139,111,71,.12) 28px);
+    display:flex; flex-direction:column; position:relative;
+  }
+  .left-page::before {
+    content:''; position:absolute; left:52px; top:0; bottom:0;
+    width:1.5px; background:rgba(200,100,120,.2);
+  }
+  .lp-title { font-family:'Playfair Display',serif; font-size:20px; margin-bottom:10px; padding-left:12px; }
+  .lp-date  { font-size:12px; color:var(--sepia); font-style:italic; padding-left:12px; margin-bottom:8px; }
+  .lp-page  { font-size:12px; color:var(--sepia-light); padding-left:12px; letter-spacing:1px; }
+  .lp-quote {
+    margin-top:auto; padding:12px 14px; font-family:'Playfair Display',serif;
+    font-style:italic; font-size:12px; color:var(--sepia-light);
+    line-height:1.6; border-left:2px solid var(--accent); opacity:.8;
+  }
+  .right-page {
+    width:50%; padding:28px 26px; position:relative;
+    background: repeating-linear-gradient(to bottom, transparent, transparent 27px, rgba(139,111,71,.1) 27px, rgba(139,111,71,.1) 28px);
+  }
+  .right-page textarea {
+    width:100%; height:100%; border:none; outline:none; resize:none;
+    font-size:15px; background:transparent; font-family:'Caveat',cursive;
+    line-height:1.87; color:var(--ink); letter-spacing:.2px;
+  }
+  .right-page textarea::placeholder { color:var(--sepia-light); font-style:italic; }
+  textarea:disabled { opacity: .6; }
+
+  .flip { animation: flipPage .6s cubic-bezier(.4,0,.2,1); }
+  @keyframes flipPage {
+    0%  { transform: rotateY(0deg); }
+    40% { transform: rotateY(-65deg); box-shadow:-12px 0 20px rgba(0,0,0,.15); }
+    100%{ transform: rotateY(0deg); }
+  }
+
+  /* ── Controls ── */
+  .controls { display:flex; align-items:center; gap:16px; margin-top:18px; }
+  .btn-nav {
+    padding:10px 24px; background:var(--ink); color:var(--paper); border:none;
+    border-radius:2px; font-family:'Lato',sans-serif; font-size:13px; font-weight:700;
+    letter-spacing:1.5px; text-transform:uppercase; cursor:pointer; transition:background .2s, opacity .2s;
+  }
+  .btn-nav:hover   { background:var(--sepia); }
+  .btn-nav:disabled{ opacity:.35; cursor:default; }
+  .page-indicator  { font-family:'Playfair Display',serif; font-size:15px; color:var(--sepia); min-width:80px; text-align:center; }
+  .save-dot {
+    width:8px; height:8px; border-radius:50%; background:#27ae60;
+    opacity:0; transition:opacity .4s; margin-left:4px;
+  }
+  .save-dot.show { opacity:1; }
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <a href="home.html">← Back to Home</a>
+  <div class="top-bar-title">📔 Personal Diary</div>
+  <div class="privacy-badge">Private</div>
+</div>
+
+<div class="book-wrapper">
+  <div class="book">
+    <div class="left-page">
+      <div class="lp-title">Personal Diary</div>
+      <div class="lp-date" id="pageDate">—</div>
+      <div class="lp-page">Page <span id="pageNumber">1</span></div>
+      <div class="lp-quote" id="quote"></div>
+    </div>
+    <div class="right-page" id="rightPage">
+      <textarea id="diaryText" placeholder="Write freely… this space is yours alone."></textarea>
+    </div>
+  </div>
+
+  <div class="status-bar" id="statusBar"></div>
+
+  <div class="controls">
+    <button class="btn-nav" id="prev" disabled>◀ Prev</button>
+    <div class="page-indicator">Page <span id="pgNum">1</span></div>
+    <button class="btn-nav" id="next">Next ▶</button>
+    <div class="save-dot" id="saveDot" title="Saved"></div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════════════════════
+//  CONFIG
+// ═══════════════════════════════════════════════════════════════════════════════
+const BASE       = 'http://localhost:3000';
+const DIARY_TYPE = 'personal';
+
+// ── Auth guard ────────────────────────────────────────────────────────────────
+const token = localStorage.getItem('token');
+if (!token) { alert('Please log in first.'); window.location.href = 'LOGIN.html'; }
+
+// ── DOM refs ──────────────────────────────────────────────────────────────────
+const textarea  = document.getElementById('diaryText');
+const statusBar = document.getElementById('statusBar');
+const saveDot   = document.getElementById('saveDot');
+const rightPage = document.getElementById('rightPage');
+
+// ── State ─────────────────────────────────────────────────────────────────────
+let currentPage = 1;
+let isSaving    = false;   // true while a fetch is in-flight
+let isFlipping  = false;   // true while page-flip animation runs
+let debounceTimer = null;
+
+// Quotes
+const quotes = [
+  '"Journal writing is a voyage to the interior." — Christina Baldwin',
+  '"Fill your paper with the breathings of your heart." — Wordsworth',
+  '"I write entirely to find out what I\'m thinking." — Joan Didion',
+  '"Write hard and clear about what hurts." — Ernest Hemingway',
+];
+document.getElementById('quote').textContent = quotes[Math.floor(Math.random() * quotes.length)];
+
+// ═══════════════════════════════════════════════════════════════════════════════
+//  STATUS HELPERS
+// ═══════════════════════════════════════════════════════════════════════════════
+function setStatus(msg, isError) {
+  statusBar.textContent = msg;
+  statusBar.className   = 'status-bar' + (isError ? ' err' : '');
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+//  LOAD  – fetch current user's page from server
+// ═══════════════════════════════════════════════════════════════════════════════
+async function loadPage() {
+  textarea.disabled = true;
+  setStatus('Loading page ' + currentPage + '…');
+  document.getElementById('pageNumber').textContent = currentPage;
+  document.getElementById('pgNum').textContent      = currentPage;
+  document.getElementById('prev').disabled          = (currentPage <= 1);
+
+  try {
+    const res = await fetch(`${BASE}/get-diary/${DIARY_TYPE}/${currentPage}`, {
+      headers: { 'Authorization': 'Bearer ' + token }
+    });
+
+    if (res.status === 401 || res.status === 403) {
+      localStorage.removeItem('token');
+      window.location.href = 'LOGIN.html';
+      return;
+    }
+
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      setStatus('Load error: ' + (err.message || res.status), true);
+      textarea.value = '';
+      return;
+    }
+
+    const data = await res.json();
+    textarea.value = data.content || '';
+
+    document.getElementById('pageDate').textContent = data.date
+      ? new Date(data.date).toLocaleDateString('en-US', { weekday:'long', year:'numeric', month:'long', day:'numeric' })
+      : '(Not yet written)';
+
+    setStatus('');
+
+  } catch (e) {
+    setStatus('Cannot reach server. Is it running?', true);
+    textarea.value = '';
+    console.error('loadPage error:', e);
+  } finally {
+    textarea.disabled = false;
+    textarea.focus();
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+//  SAVE  – returns a Promise that resolves when the server confirms the save
+//          (or immediately if there's nothing new to save)
+// ═══════════════════════════════════════════════════════════════════════════════
+function savePage() {
+  // Always save whatever is currently in the textarea — no "dirty" flag.
+  // This guarantees the flip waits for real server confirmation.
+  return new Promise(async (resolve) => {
+    const content = textarea.value;
+
+    // Don't send duplicate in-flight requests
+    if (isSaving) { resolve(); return; }
+    isSaving = true;
+    setStatus('Saving…');
+
+    try {
+      const res = await fetch(`${BASE}/save-diary`, {
+        method : 'POST',
+        headers: {
+          'Content-Type' : 'application/json',
+          'Authorization': 'Bearer ' + token
+        },
+        body: JSON.stringify({
+          page_number: currentPage,   // ← exact field name server expects
+          type       : DIARY_TYPE,    // ← 'personal'
+          content    : content
+        })
+      });
+
+      if (res.status === 401 || res.status === 403) {
+        localStorage.removeItem('token');
+        window.location.href = 'LOGIN.html';
+        return;
+      }
+
+      if (res.ok) {
+        setStatus('');
+        saveDot.classList.add('show');
+        setTimeout(() => saveDot.classList.remove('show'), 2000);
+        document.getElementById('pageDate').textContent =
+          new Date().toLocaleDateString('en-US', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+      } else {
+        const err = await res.json().catch(() => ({}));
+        setStatus('Save failed: ' + (err.message || res.status), true);
+      }
+
+    } catch (e) {
+      setStatus('Save failed – server not reachable', true);
+      console.error('savePage error:', e);
+    } finally {
+      isSaving = false;
+      resolve();   // always resolve so flip can continue
+    }
+  });
+}
+
+// ── Auto-save while typing (debounced 1.5 s) ─────────────────────────────────
+textarea.addEventListener('input', () => {
+  clearTimeout(debounceTimer);
+  debounceTimer = setTimeout(savePage, 1500);
+});
+
+// ═══════════════════════════════════════════════════════════════════════════════
+//  FLIP  – save first (await), then flip, then load next page
+// ═══════════════════════════════════════════════════════════════════════════════
+async function flipToPage(newPage) {
+  if (isFlipping) return;
+  isFlipping = true;
+
+  // ① Cancel any pending debounce
+  clearTimeout(debounceTimer);
+
+  // ② Disable textarea so user can't type during save+flip
+  textarea.disabled = true;
+
+  // ③ AWAIT the save — page does NOT flip until server confirms
+  await savePage();
+
+  // ④ Now animate the flip
+  rightPage.classList.add('flip');
+
+  // ⑤ Halfway through the flip, switch page and load new content
+  setTimeout(() => {
+    currentPage = newPage;
+    loadPage();   // loadPage re-enables textarea when done
+  }, 300);
+
+  // ⑥ Remove flip class after animation completes
+  setTimeout(() => {
+    rightPage.classList.remove('flip');
+    isFlipping = false;
+  }, 600);
+}
+
+document.getElementById('next').addEventListener('click', () => flipToPage(currentPage + 1));
+document.getElementById('prev').addEventListener('click', () => {
+  if (currentPage > 1) flipToPage(currentPage - 1);
+});
+
+// Save on tab/window close
+window.addEventListener('beforeunload', () => {
+  clearTimeout(debounceTimer);
+  // Use sendBeacon so it works even when the page is closing
+  const body = JSON.stringify({ page_number: currentPage, type: DIARY_TYPE, content: textarea.value });
+  navigator.sendBeacon(`${BASE}/save-diary`,
+    new Blob([body], { type: 'application/json' })
+  );
+});
+
+// ── Init ──────────────────────────────────────────────────────────────────────
+loadPage();
+</script>
+</body>
+</html>

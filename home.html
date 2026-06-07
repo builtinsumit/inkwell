@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inkwell — Home</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1208;
+    --paper: #faf6ef;
+    --warm: #c8956c;
+    --warm-light: #e8c9a8;
+    --sepia: #8b6f47;
+    --sepia-light: #d4b896;
+    --cream: #f5ede0;
+    --shadow: rgba(26,18,8,0.12);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    min-height: 100vh;
+    background: var(--cream);
+    background-image:
+      radial-gradient(ellipse at 10% 90%, rgba(200,149,108,0.1) 0%, transparent 50%),
+      url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%238b6f47' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    font-family: 'Lato', sans-serif;
+    color: var(--ink);
+  }
+
+  /* NAV */
+  nav {
+    background: var(--ink);
+    background-image: linear-gradient(90deg, #1a1208 0%, #2a1f0e 100%);
+    padding: 0 40px;
+    display: flex;
+    align-items: center;
+    height: 62px;
+    box-shadow: 0 2px 12px rgba(26,18,8,0.3);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .nav-brand {
+    font-family: 'Playfair Display', serif;
+    color: var(--paper);
+    font-size: 22px;
+    letter-spacing: 1px;
+    margin-right: 40px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 4px;
+    flex: 1;
+  }
+
+  .nav-links a {
+    color: var(--sepia-light);
+    text-decoration: none;
+    font-size: 13px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    font-weight: 700;
+    padding: 8px 16px;
+    border-radius: 2px;
+    transition: color 0.2s, background 0.2s;
+  }
+
+  .nav-links a:hover, .nav-links a.active {
+    color: var(--paper);
+    background: rgba(255,255,255,0.06);
+  }
+
+  .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .nav-user {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--sepia-light);
+    font-size: 13px;
+  }
+
+  .avatar {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: var(--warm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 14px;
+    color: white;
+  }
+
+  .btn-logout {
+    background: none;
+    border: 1px solid rgba(200,149,108,0.4);
+    color: var(--sepia-light);
+    padding: 6px 14px;
+    border-radius: 2px;
+    cursor: pointer;
+    font-size: 12px;
+    font-family: 'Lato', sans-serif;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    transition: all 0.2s;
+  }
+
+  .btn-logout:hover { border-color: var(--warm); color: var(--warm); }
+
+  /* MAIN */
+  main {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 60px 40px;
+  }
+
+  .welcome-section {
+    margin-bottom: 56px;
+    text-align: center;
+    animation: fade-up 0.5s ease both;
+  }
+
+  @keyframes fade-up {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .welcome-section .date-tag {
+    font-size: 12px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--sepia);
+    margin-bottom: 12px;
+  }
+
+  .welcome-section h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 42px;
+    color: var(--ink);
+    margin-bottom: 12px;
+    line-height: 1.2;
+  }
+
+  .welcome-section p {
+    color: var(--sepia);
+    font-size: 16px;
+    font-weight: 300;
+  }
+
+  .ornament {
+    color: var(--warm);
+    font-size: 20px;
+    letter-spacing: 10px;
+    margin: 20px 0;
+    opacity: 0.6;
+  }
+
+  /* DIARY CARDS */
+  .diary-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 28px;
+    margin-bottom: 56px;
+  }
+
+  .diary-card {
+    background: var(--paper);
+    border-radius: 4px;
+    box-shadow: 0 4px 20px var(--shadow);
+    padding: 40px 36px;
+    cursor: pointer;
+    text-decoration: none;
+    color: var(--ink);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    transition: transform 0.2s, box-shadow 0.2s;
+    position: relative;
+    overflow: hidden;
+    animation: fade-up 0.5s ease both;
+  }
+
+  .diary-card:nth-child(1) { animation-delay: 0.1s; }
+  .diary-card:nth-child(2) { animation-delay: 0.2s; }
+
+  .diary-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    transition: height 0.3s;
+  }
+
+  .diary-card.personal::before { background: linear-gradient(90deg, #e8a0b4, #c8956c); }
+  .diary-card.public::before   { background: linear-gradient(90deg, #8ba8c8, #6c8cb4); }
+
+  .diary-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px var(--shadow);
+  }
+
+  .diary-icon {
+    font-size: 64px;
+    margin-bottom: 20px;
+    transition: transform 0.3s;
+  }
+
+  .diary-card:hover .diary-icon { transform: scale(1.1) rotate(-5deg); }
+
+  .diary-card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 24px;
+    margin-bottom: 10px;
+  }
+
+  .diary-card p {
+    font-size: 14px;
+    color: var(--sepia);
+    font-weight: 300;
+    line-height: 1.6;
+  }
+
+  .diary-badge {
+    margin-top: 20px;
+    padding: 6px 18px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .personal .diary-badge { background: rgba(232,160,180,0.15); color: #c8607a; }
+  .public .diary-badge   { background: rgba(139,168,200,0.15); color: #4a78a8; }
+
+  /* QUICK STATS */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    animation: fade-up 0.5s ease 0.3s both;
+  }
+
+  .stat-card {
+    background: var(--paper);
+    border-radius: 4px;
+    box-shadow: 0 2px 12px var(--shadow);
+    padding: 24px 20px;
+    text-align: center;
+  }
+
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 36px;
+    color: var(--warm);
+    display: block;
+  }
+
+  .stat-label {
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--sepia);
+    margin-top: 4px;
+    font-weight: 700;
+  }
+
+  @media (max-width: 640px) {
+    .diary-grid { grid-template-columns: 1fr; }
+    .stats-row  { grid-template-columns: 1fr; }
+    nav { padding: 0 16px; }
+    main { padding: 40px 20px; }
+    .welcome-section h1 { font-size: 30px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="home.html" class="nav-brand">✒️ Inkwell</a>
+  <div class="nav-links">
+    <a href="home.html" class="active">Home</a>
+    <a href="personaldiary.html">Personal</a>
+    <a href="publicdiary.html">Public</a>
+  </div>
+  <div class="nav-right">
+    <div class="nav-user">
+      <div class="avatar" id="avatarInitial">?</div>
+      <span id="navName">…</span>
+    </div>
+    <button class="btn-logout" onclick="logout()">Sign Out</button>
+  </div>
+</nav>
+
+<main>
+  <div class="welcome-section">
+    <div class="date-tag" id="todayDate"></div>
+    <h1>Good <span id="timeGreeting">day</span>, <span id="userName">friend</span> ✦</h1>
+    <p>What would you like to write today?</p>
+    <div class="ornament">❧ ✦ ❧</div>
+  </div>
+
+  <div class="diary-grid">
+    <a class="diary-card personal" href="personaldiary.html">
+      <div class="diary-icon">📔</div>
+      <h3>Personal Diary</h3>
+      <p>Your private thoughts, feelings, and memories — visible only to you.</p>
+      <div class="diary-badge">Private</div>
+    </a>
+    <a class="diary-card public" href="publicdiary.html">
+      <div class="diary-icon">📖</div>
+      <h3>Public Diary</h3>
+      <p>Share your reflections and stories with the world around you.</p>
+      <div class="diary-badge">Shared</div>
+    </a>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat-card">
+      <span class="stat-num" id="statPages">—</span>
+      <div class="stat-label">Pages Written</div>
+    </div>
+    <div class="stat-card">
+      <span class="stat-num" id="statDays">—</span>
+      <div class="stat-label">Days Journaling</div>
+    </div>
+    <div class="stat-card">
+      <span class="stat-num" id="statWords">—</span>
+      <div class="stat-label">Words Penned</div>
+    </div>
+  </div>
+</main>
+
+<script>
+  // ── Auth guard ──────────────────────────────────────────────────────────────
+  const token = localStorage.getItem('token');
+  const user  = JSON.parse(sessionStorage.getItem('user') || 'null');
+  if (!token || !user) {
+    window.location.href = 'LOGIN.html';
+  }
+
+  // Greetings
+  const h = new Date().getHours();
+  document.getElementById('timeGreeting').textContent =
+    h < 12 ? 'morning' : h < 17 ? 'afternoon' : 'evening';
+  document.getElementById('userName').textContent     = user?.name?.split(' ')[0] || 'friend';
+  document.getElementById('navName').textContent      = user?.name || '';
+  document.getElementById('avatarInitial').textContent =
+    (user?.name || '?')[0].toUpperCase();
+
+  const now = new Date();
+  document.getElementById('todayDate').textContent =
+    now.toLocaleDateString('en-US', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+
+  // BUG FIX: stats were read from localStorage which is empty since data is now in the DB.
+  // Now fetches real stats from the server /my-stats endpoint.
+  async function loadStats() {
+    try {
+      const res  = await fetch('http://localhost:3000/my-stats', {
+        headers: { 'Authorization': 'Bearer ' + token }
+      });
+      if (!res.ok) return;
+      const data = await res.json();
+      document.getElementById('statPages').textContent = data.pages ?? '0';
+      document.getElementById('statDays').textContent  = data.days  ?? '0';
+      document.getElementById('statWords').textContent = data.words ?? '0';
+    } catch (err) {
+      console.error('Stats error:', err);
+      document.getElementById('statPages').textContent = '—';
+      document.getElementById('statDays').textContent  = '—';
+      document.getElementById('statWords').textContent = '—';
+    }
+  }
+
+  loadStats();
+
+  function logout() {
+    sessionStorage.clear();
+    localStorage.removeItem('token');
+    window.location.href = 'LOGIN.html';
+  }
+</script>
+</body>
+</html>

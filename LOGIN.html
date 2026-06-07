@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inkwell — Sign In</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1208;
+    --paper: #faf6ef;
+    --warm: #c8956c;
+    --warm-light: #e8c9a8;
+    --sepia: #8b6f47;
+    --sepia-light: #d4b896;
+    --cream: #f5ede0;
+    --shadow: rgba(26,18,8,0.15);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    min-height: 100vh;
+    background-color: var(--cream);
+    background-image:
+      radial-gradient(ellipse at 20% 50%, rgba(200,149,108,0.12) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 20%, rgba(139,111,71,0.1) 0%, transparent 50%),
+      url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%238b6f47' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Lato', sans-serif;
+  }
+
+  .page-wrap {
+    display: flex;
+    width: 860px;
+    max-width: 96vw;
+    min-height: 520px;
+    box-shadow: 0 20px 60px var(--shadow), 0 4px 12px rgba(26,18,8,0.08);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  /* LEFT DECORATIVE PANEL */
+  .left-panel {
+    width: 42%;
+    background: var(--ink);
+    background-image:
+      radial-gradient(ellipse at 30% 70%, rgba(200,149,108,0.25) 0%, transparent 55%),
+      radial-gradient(ellipse at 70% 20%, rgba(139,111,71,0.2) 0%, transparent 45%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 36px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .left-panel::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 27px,
+      rgba(200,149,108,0.06) 27px,
+      rgba(200,149,108,0.06) 28px
+    );
+  }
+
+  .left-panel::after {
+    content: '';
+    position: absolute;
+    right: 0; top: 10%; bottom: 10%;
+    width: 3px;
+    background: linear-gradient(to bottom, transparent, var(--warm), var(--warm-light), var(--warm), transparent);
+    border-radius: 2px;
+  }
+
+  .brand {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+  }
+
+  .brand-icon {
+    font-size: 52px;
+    margin-bottom: 16px;
+    display: block;
+    animation: quill-float 3s ease-in-out infinite;
+  }
+
+  @keyframes quill-float {
+    0%, 100% { transform: translateY(0) rotate(-5deg); }
+    50% { transform: translateY(-6px) rotate(-5deg); }
+  }
+
+  .brand-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 36px;
+    color: var(--paper);
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+  }
+
+  .brand-tagline {
+    font-size: 13px;
+    color: var(--sepia-light);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    font-weight: 300;
+  }
+
+  .divider-ornament {
+    margin: 28px 0;
+    color: var(--warm);
+    font-size: 18px;
+    letter-spacing: 8px;
+    opacity: 0.7;
+  }
+
+  .left-quote {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    color: var(--sepia-light);
+    font-size: 14px;
+    line-height: 1.8;
+    text-align: center;
+    opacity: 0.8;
+  }
+
+  /* RIGHT FORM PANEL */
+  .right-panel {
+    flex: 1;
+    background: var(--paper);
+    padding: 52px 48px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+  }
+
+  .right-panel::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--warm), var(--sepia-light));
+  }
+
+  h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    color: var(--ink);
+    margin-bottom: 6px;
+  }
+
+  .subtitle {
+    color: var(--sepia);
+    font-size: 13px;
+    margin-bottom: 36px;
+    font-weight: 300;
+    letter-spacing: 0.5px;
+  }
+
+  .form-group {
+    margin-bottom: 22px;
+    position: relative;
+  }
+
+  label {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--sepia);
+    margin-bottom: 8px;
+  }
+
+  input[type="text"], input[type="password"] {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1.5px solid var(--sepia-light);
+    border-radius: 2px;
+    background: white;
+    font-family: 'Lato', sans-serif;
+    font-size: 15px;
+    color: var(--ink);
+    transition: border-color 0.2s, box-shadow 0.2s;
+    outline: none;
+  }
+
+  input:focus {
+    border-color: var(--warm);
+    box-shadow: 0 0 0 3px rgba(200,149,108,0.15);
+  }
+
+  .btn-login {
+    width: 100%;
+    padding: 14px;
+    background: var(--ink);
+    color: var(--paper);
+    border: none;
+    border-radius: 2px;
+    font-family: 'Lato', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+    margin-top: 8px;
+  }
+
+  .btn-login:hover { background: var(--sepia); }
+  .btn-login:active { transform: scale(0.99); }
+
+  .register-link {
+    text-align: center;
+    margin-top: 24px;
+    font-size: 13px;
+    color: var(--sepia);
+  }
+
+  .register-link a {
+    color: var(--warm);
+    text-decoration: none;
+    font-weight: 700;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.2s;
+  }
+
+  .register-link a:hover { border-bottom-color: var(--warm); }
+
+  #message {
+    margin-top: 14px;
+    padding: 10px 14px;
+    border-radius: 2px;
+    font-size: 13px;
+    display: none;
+  }
+  #message.error { background: #fdf0f0; color: #c0392b; border-left: 3px solid #c0392b; display: block; }
+  #message.success { background: #f0fdf4; color: #27ae60; border-left: 3px solid #27ae60; display: block; }
+
+  @media (max-width: 640px) {
+    .left-panel { display: none; }
+    .right-panel { padding: 40px 28px; }
+  }
+</style>
+</head>
+<body>
+<div class="page-wrap">
+  <div class="left-panel">
+    <div class="brand">
+      <span class="brand-icon">✒️</span>
+      <div class="brand-name">Inkwell</div>
+      <div class="brand-tagline">Your digital diary</div>
+      <div class="divider-ornament">❧ ✦ ❧</div>
+      <div class="left-quote">"The habit of writing for my own eye only is good training for a writer."<br>— Virginia Woolf</div>
+    </div>
+  </div>
+
+  <div class="right-panel">
+    <h2>Welcome back</h2>
+    <div class="subtitle">Sign in to continue your story</div>
+
+    <div class="form-group">
+      <label for="user">Username</label>
+      <input type="text" id="user" placeholder="Enter your username" autocomplete="username">
+    </div>
+
+    <div class="form-group">
+      <label for="pass">Password</label>
+      <input type="password" id="pass" placeholder="Enter your password" autocomplete="current-password">
+    </div>
+
+    <button class="btn-login" onclick="doLogin()">Sign In</button>
+    <div id="message"></div>
+
+    <div class="register-link">
+      New here? <a href="reg.html">Create an account</a>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Allow Enter key
+  document.addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+  async function doLogin() {
+  const username = document.getElementById('user').value.trim();
+  const password = document.getElementById('pass').value;
+  const msgEl    = document.getElementById('message');
+
+  msgEl.className = '';
+  msgEl.style.display = 'none';
+
+  if (!username || !password) {
+    msgEl.className = 'error';
+    msgEl.textContent = 'Please fill in all fields.';
+    return;
+  }
+
+  try {
+    const res = await fetch('http://localhost:3000/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, password })
+    });
+
+    const data = await res.json();
+
+    console.log("Response:", data); // 👈 IMPORTANT DEBUG
+
+    if (res.ok) {
+
+      // ✅ STORE TOKEN
+      localStorage.setItem("token", data.token);
+
+      // ✅ STORE USER INFO
+      sessionStorage.setItem('user', JSON.stringify({
+        id: data.userId,
+        username: data.username,
+        name: data.name
+      }));
+
+      msgEl.className = 'success';
+      msgEl.textContent = `Welcome ${data.name}`;
+
+      // 🔴 FORCE REDIRECT
+      setTimeout(() => {
+        window.location.href = "home.html";
+      }, 1000);
+
+    } else {
+      msgEl.className = 'error';
+      msgEl.textContent = data.message || 'Login failed';
+    }
+
+  } catch (err) {
+    console.error(err);
+    msgEl.className = 'error';
+    msgEl.textContent = 'Server connection error';
+  }
+}
+</script>
+</body>
+</html>
